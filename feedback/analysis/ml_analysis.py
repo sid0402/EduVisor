@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import matplotlib.patches as mpatches
 from transformers import pipeline
+import plotly.graph_objects as go
+
+
 
 file = open('utterances.pkl','rb')
 
@@ -64,10 +67,10 @@ def visualize1(df):
 
     return time_points
 
-time_points = visualize1(pd.DataFrame(utterances))
+#time_points = visualize1(pd.DataFrame(utterances))
 
-pipe = pipeline("text-classification", model="mrsinghania/asr-question-detection")
-
+#pipe = pipeline("text-classification", model="mrsinghania/asr-question-detection")
+'''
 questions = 0
 for utterance in utterances:
     utterance['question'] = int(pipe('lol')[0]['label'][-1])
@@ -75,3 +78,87 @@ for utterance in utterances:
         questions+=1
         
 print(questions)
+'''
+def visualize1(df):
+    for count, i in enumerate(df['emotion']):
+        if i == 'non-engaging':
+            i = 0
+        else:
+            i = 1
+        df.loc[count, 'emotion'] = i
+
+    time_points = {'0': [], '1': []}
+    for i, time in enumerate(df['start_time']):
+        end_time = df.loc[i, 'end_time']
+        gap = end_time - time
+        time_points[str(df.loc[i, 'emotion'])].append((time/1000, gap/1000))
+
+    # Calculate the overall time range
+    min_time = min(time_points['0'][0][0], time_points['1'][0][0])
+    max_time = max(time_points['0'][-1][0], time_points['1'][-1][1])
+
+    # Convert the time range to minutes
+    min_time = min_time / 60
+    max_time = max_time / 60
+
+    # Create figure
+    fig = go.Figure()
+
+    # Add non-engaging bars
+    for time_point in time_points['0']:
+        x_center = (time_point[0] + time_point[1]) / (2 * 60)  # Center of the interval in minutes
+        fig.add_shape(
+            type="rect",
+            x0=time_point[0] / 60,
+            x1=time_point[1] / 60,
+            y0=4,
+            y1=16,
+            line=dict(color="red"),
+            fillcolor="red",
+            name="Negative",
+        )
+
+    # Add engaging bars
+    for time_point in time_points['1']:
+        x_center = (time_point[0] + time_point[1]) / (2 * 60)  # Center of the interval in minutes
+        fig.add_shape(
+            type="rect",
+            x0=time_point[0] / 60,
+            x1=time_point[1] / 60,
+            y0=4,
+            y1=16,
+            line=dict(color="green"),
+            fillcolor="green",
+            name="Positive",
+        )
+
+    fig.update_layout(
+        xaxis=dict(
+            title='Time (minutes)',
+            range=[min_time, max_time],  # Set the initial range to show the full time duration
+            tickmode="auto",
+            nticks=10,
+            tickformat="%H:%M:%S",
+        ),
+        yaxis=dict(tickvals=[10], ticktext=['Emotion'], range=[0,25]),
+        showlegend=True,
+        height=300,
+        width=800,
+    )
+
+    fig.show()
+
+# Example usage:
+# Assuming you have a DataFrame df with columns 'start_time', 'end_time', and 'emotion'
+# visualize1(df)
+
+
+# Example usage:
+# Assuming you have a DataFrame df with columns 'start_time', 'end_time', and 'emotion'
+# visualize1(df)
+
+
+# Example usage:
+# Assuming you have a DataFrame df with columns 'start_time', 'end_time', and 'emotion'
+visualize1(pd.DataFrame(utterances))
+print(pd.DataFrame(utterances))

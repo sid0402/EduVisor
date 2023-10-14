@@ -5,7 +5,7 @@ from pydub import AudioSegment
 from home.models import Video
 import pickle
 from google.cloud import speech
-
+from lectures.models import Lectures
 
 # Create your views here.
 def home(request):
@@ -15,12 +15,13 @@ def home(request):
     audio.write_audiofile('audio/audio.wav')
     audio = AudioSegment.from_wav("audio/audio.wav")
     
-    #utterances = calculate_utterances(audio)
-
+    utterances = calculate_utterances(audio)
+    print(utterances)
+    '''
     file = open('utterances.pkl', 'rb')
     utterances = pickle.load(file)
     file.close()
-
+    '''
     utterances = clean_utterances(utterances)
     utterances, questions = questions_metric(utterances)
     engage = engagement_score(utterances)
@@ -49,7 +50,7 @@ def calculate_utterances(audio):
         utt_dict['transcript'] = text
         i+=t
         print(utt_dict)
-        utterances.append(utt_dict)
+        utterances.append(utt_dict)        
     return utterances
 
 def clean_utterances(utterances):

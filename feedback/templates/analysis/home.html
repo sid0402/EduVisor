@@ -1,4 +1,10 @@
+{%extends 'main.html'%}
+
+{%block content%}
+
 <h1>Analysis Dashboard</h1>
-{{questions}}
-{{engagement_score}}
-{{tone_modulation}}
+<h1>Questions: {{questions}}</h1>
+<h1>Engagement: {{engagement_score}}</h1>
+<h1>Tone Modulation: {{tone_modulation}}</h1>
+
+{%endblock content%}
