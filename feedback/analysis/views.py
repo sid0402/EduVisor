@@ -4,6 +4,8 @@ from moviepy.editor import *
 from pydub import AudioSegment
 from home.models import Video
 import pickle
+from google.cloud import speech
+
 
 # Create your views here.
 def home(request):
@@ -31,21 +33,23 @@ def calculate_utterances(audio):
     t = 60000*0.5
 
     pipe_emotion = pipeline("audio-classification", model="ehcalabres/wav2vec2-lg-xlsr-en-speech-emotion-recognition")
-    pipe_asr = pipeline("automatic-speech-recognition", model="microsoft/speecht5_asr")
+    #pipe_asr = pipeline("automatic-speech-recognition", model="microsoft/speecht5_asr")
 
     while (i<len(audio)-t):
         utt_dict = {}
         utt_dict['start_time'] = i
         utt_dict['end_time'] = i+t
-        #segments.append(audio[i:i+t])
         audio[i:i+t].export('audio/temp.wav', format="wav")
         utt_dict['emotion'] = pipe_emotion('audio/temp.wav')
-        #emotions.append(pipe('audio/temp.wav'))
-        utt_dict['transcript']=pipe_asr('audio/temp.wav')
-        #utt_dict['transcript'] = speech_to_text('audio/temp.wav')
+        response = speech_to_text('audio/temp.wav')
+        text = ''
+        for j, result in enumerate(response.results):
+            alternative = result.alternatives[0]
+            text+=alternative.transcript
+        utt_dict['transcript'] = text
         i+=t
         print(utt_dict)
-    utterances.append(utt_dict)
+        utterances.append(utt_dict)
     return utterances
 
 def clean_utterances(utterances):
@@ -80,3 +84,30 @@ def engagement_score(utterances):
         if (utterance['emotion']=='engaging'):
             engage_times+=1
     return engage_times/len(utterances)
+
+def speech_to_text(filename):
+    # Instantiates a client
+    #client = speech.SpeechClient()
+
+    client = speech.SpeechClient.from_service_account_json('hackgt-audio-9ba4eb05b9b2.json')
+
+    with open(filename,'rb') as f:
+        audio_data = f.read()
+
+    # The name of the audio file to transcribe
+    #gcs_uri = filename
+
+    audio = speech.RecognitionAudio(content=audio_data)
+
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+        language_code="en-US",
+        sample_rate_hertz = 44100,
+        audio_channel_count = 2,
+        enable_automatic_punctuation=True
+    )
+
+    # Detects speech in the audio file
+    response = client.recognize(config=config, audio=audio)
+    
+    return response

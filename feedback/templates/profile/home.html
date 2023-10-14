@@ -1,0 +1,140 @@
+{%extends 'main.html'%}
+
+{%block content%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split Webpage</title>
+    <style>
+        
+        .container {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background-color: #8F8FDB; /* Dark grey background for the entire page */
+            color: #333333;
+        }
+
+        #left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #29245E; /* Light grey background */
+            box-shadow: 5px 0 5px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow on the right edge for depth */
+            overflow-y: auto; /* In case content exceeds container height */
+        }
+
+        #left .box {
+            padding: 20px;
+            border-bottom: 1px solid #aaa; /* Subtle separator */
+            cursor: pointer; /* Indicates clickable items */
+        }
+
+        #right {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            padding: 20px;
+            background-color: #8F8FDB;
+        }
+
+        .box {
+            width: 80%;
+            background-color: #B5B4DE;
+            margin: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #bdbdbd;
+            border-radius: 30px; /* Rounded corners */
+            box-shadow: 6px 6px #aaa;
+        }
+
+        .content-container {
+            width: 80%;
+            height: 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        img {
+            max-width: 50%;
+            max-height: 50%;
+        }
+        
+        #right .content-container {
+            flex-basis: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #B5B4DE; 
+            border-radius: 30px; /* Rounded corners */
+            margin-bottom: 20px; /* Add space between the containers */
+            padding: 20px; /* Some padding for better visuals */
+        }
+
+        .lectures {
+            color:#333333;
+        }
+        .content-container{
+            margin:30px;
+            border-radius: 40px;
+            padding:5px;
+        }
+
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let boxes = document.querySelectorAll(".box");
+            let improvementText = document.getElementById("improvement-text");
+        
+            boxes.forEach(box => {
+                box.addEventListener("click", function() {
+                    let improvement = this.getAttribute("data-improvement");
+                    improvementText.textContent = improvement;
+                });
+            });
+        });
+        </script>
+</head>
+
+<body>
+    <div class="container">
+    <div id="left" class="lectures">
+        {% for lecture in lectures %}
+            <div class="box" data-improvement="{{ lecture.suggested_improvement }}" data-name="{{ lecture.name }}" data-date="{{ lecture.date }}">
+                <strong>Lecture Name:</strong> {{ lecture.name }} <br>
+                <strong>Lecture Date:</strong> {{ lecture.date }}
+            </div>
+        {% endfor %}
+    </div>
+    <div id="right">
+        <div class="content-container">
+            <h2>Analytics Dashboard</h2>
+            <img src="https://via.placeholder.com/350" alt="Placeholder Image">
+        </div>
+        <div class="content-container">
+            <h2>Suggested Improvement</h2>
+            <p id="improvement-text">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultrices posuere dictum. Proin at lectus id enim condimentum interdum. Praesent vitae neque non nisl volutpat porttitor. Donec bibendum risus id ante tincidunt, nec lacinia nisi congue.
+            </p>
+        </div>
+    </div>
+</div>
+    
+
+ 
+    
+</body>
+
+</html>
+{%endblock content%}
