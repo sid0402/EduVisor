@@ -66,7 +66,7 @@ while (i<len(audio)-t):
     #segments.append(audio[i:i+t])
     audio[i:i+t].export('audio/temp.wav', format="wav")
     utt_dict['emotion'] = pipe('audio/temp.wav')
-    emotions.append(pipe('audio/temp.wav'))
+    #emotions.append(pipe('audio/temp.wav'))
     utt_dict['transcript']=pipe2('audio/temp.wav')
     #utt_dict['transcript'] = speech_to_text('audio/temp.wav')
     i+=t

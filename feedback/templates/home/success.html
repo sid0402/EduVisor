@@ -2,9 +2,9 @@
 <h2>To get started, input your recorded lecture</h2>
 
 {% if video %}
-<h1>{{video.name}}</h1>
+<h1>{{name}}</h1>
 <video controls="controls">
-    <source src="/media/23/_Its_going_to_be_absolutely_CRAZY___India_vs_Pakistan_World_Cup_PREVIEW_.mp4" type="video/mp4"/>
+    <source src="{{filename}}" type="video/mp4"/>
 </video>
 {% endif %}
 <a href="/analysis/">Analyze</a>
