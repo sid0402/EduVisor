@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "hackgt-audio",
+  "private_key_id": "9ba4eb05b9b211cf9b2f72b556e6a569bc6e23df",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC8ZF9Jcr4QjrAI\nH+PUpvt8aIEadYxELNsVV/pG50mzkXabWqA0El5IvzCM7xJ8e7GmUBp6suv4xd7w\nnnb2l6yzUlGXrGeNXDTylaqUGttL6j+pkbio+tGLOmXOo6SH8TxKPLpOilHyWlEY\nO/1Mah+LkB1heLsEOP12DDZgBM6iYBET6BIlYiqq1c40vV7O2Ean5TM+zLz5JTPZ\n2leyUfzba6F+rR0omhjs+gMuhyKZsxK5IZSgnXMxLjE18F9wHOSBi2VfzqGr+vf4\nSoflF+xxkxaxISdBl1ZmVhUKaeqUfdGpafAA+eruEZbTLqD7PXTl/ahamhjleVAM\nJ3MzoO3HAgMBAAECggEABn5ITMhahdsAmauo28in5cyyBngDTjiJAALB/Qejxq0+\njnHy66Gvlj7gvzrOQyr9+tBdtLTynAtV5qr0JHO0uwBmNUJkjQfn/9tXmu2CC8ao\n3oERAXRM04A/NX5kJfI3xudEXcilkCMpW9GeposItZh2BjaagCNUb/t2D8Es8qqY\nIN7rpN8MlVf36CHpU82HlcUcn0eE7Rat4oRg5Dw01k9pKzrLTcA0Ot7Kav1WsjQB\nrpz7/Ajz0H045SRdHYSfHwcN/NcP60iwyTn0Hn4r0y1HObdnBTl4UgxNGNVBqj8Z\nX7ZbEp5HF/QsjOhp9LFhHqa/P6F5tA3SwgDpqGMA4QKBgQDknb8es2BIaBty9Kwr\nMEjM6AqIB0coxRzQ8HBp4S1Tcc3/URmEjztpxdcJvNEWZHK43ptahjIHGMbr/LBq\n2dJ2LYUSMIGKkSUM30Gbx7q4gQh+HP4k8mSnSoBlst4vapQg1ocrAYNNCeMGmm4P\nknL2sXEye4ufTGjGz3m8EzoNNQKBgQDS9TL+zVbABbmyV6DeyFTOiT8Z2VfmL70O\nZIbhHnkNouatmbtEN/Xe6/3I/tpRKmOYDQ85yxxdv9KNSyzrPhVy5rh/K1x7aaU1\nzxdXTufaOPLZEKIdsmvB8attnFBzZnFHRMQlUQniJ8+Afd9UJkrF9PfxS5QescrL\nLuv9Lh76iwKBgCgGfjmPyiGjKHsd3y7Ii1ZkocNjEtBOglcKYYQICnl7iUdUGZWd\nxhckrhtkVW8IMxWu06ArsoKPkfQrD3AFptVN7uhaWbO66bOxOrldZJF89dGuncg2\nL+0iHAyyHjhK/pgpNw0OfMB2JKs5Sl+rkjkio+DkxHMlW4rDNFr7OsSpAoGBAIEl\nXR/CI36QwrscjD520/xQ51Fyzi38Qbgi8LO2jRM9DA1xFMTRoXLkdExtQMf5tFjs\nfcq6vlXiTgrz377wFf9uobowmIBxD5QegMKRar0cqgca+LRHe1KTGYiT7miHaYfg\n4FecAfnyt0SJSoRgoNwJeRS+WSJlY6n5wr0PVCW7AoGBAKfV9pKSdPYbWrvvjAyu\nY2cS6UpQbTrGS8lVPWAmqTFfBELEvKR8vfm8dDOM1z6zH1hZrqvBq+AsQ3TlBwtn\n3PmACKpOINr8AVXIy+bvFQSqsO4bl3QJ9n+FHcVMAvOuyMWgTg55rik0v050eCfT\nXYRmX/mvjQpRjwL1BoJg2dWD\n-----END PRIVATE KEY-----\n",
+  "client_email": "sid0402@hackgt-audio.iam.gserviceaccount.com",
+  "client_id": "105480011224030273357",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sid0402%40hackgt-audio.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
