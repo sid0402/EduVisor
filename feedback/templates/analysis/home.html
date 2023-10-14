@@ -4,6 +4,12 @@
 
 <html>
     <style>
+        h1 {
+            text-align: center;
+        }
+        .container {
+            background-color: #8F8FDB;
+        }
         .boxes {
             display: inline-flex;
             align-items: center;
@@ -17,8 +23,19 @@
             position:relative;
             right:-150px;
         }
+        .sentiment-graph {
+            margin-top: 50px;
+            border: 1px solid black;
+            width:85%;
+            height:300px;
+            margin-right:20px;
+            border-radius: 20px;
+            position:relative;
+            right:-150px;
+        }
     </style>
     <body>
+        <div class="container">
         <div>
             <h1>Analysis Dashboard</h1>
         </div>
@@ -38,6 +55,7 @@
             {{ graph|safe }}
             {% endif %}
         </div>
+    </div>
     </body>
 </html>
 

@@ -25,7 +25,7 @@ def home(request):
     file.close()
     
     utterances = clean_utterances(utterances)
-    utterances, questions = questions_metric(utterances)
+    questions = questions_metric(utterances)
     engage = engagement_score(utterances)
     context = {'questions':questions,'engagement_score':engage,'tone_modulation':0.5,'graph':visualize1(pd.DataFrame(utterances))}
     return render(request,'analysis/home.html',context)
@@ -71,15 +71,12 @@ def clean_utterances(utterances):
     return utterances
 
 def questions_metric(utterances):
-    pipe = pipeline("text-classification", model="mrsinghania/asr-question-detection")
-
     questions = 0
     for utterance in utterances:
-        utterance['question'] = int(pipe('lol')[0]['label'][-1])
-        if utterance['question'] == 1:
-            questions+=1
-
-    return utterances, questions
+        for utterance['transcript'] in utterance:
+            if "?" in utterance['transcript']:
+                questions  += utterance['transcript'].count("?")
+    return questions
     
 def engagement_score(utterances):
     engage_times = 0
@@ -180,6 +177,8 @@ def visualize1(df):
         showlegend=True,
         height=300,
         width=800,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
     )
 
     #fig.show()
