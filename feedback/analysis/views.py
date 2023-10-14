@@ -6,6 +6,8 @@ from home.models import Video
 import pickle
 from google.cloud import speech
 from lectures.models import Lectures
+import pandas as pd
+import plotly.graph_objects as go
 
 # Create your views here.
 def home(request):
@@ -15,17 +17,17 @@ def home(request):
     audio.write_audiofile('audio/audio.wav')
     audio = AudioSegment.from_wav("audio/audio.wav")
     
-    utterances = calculate_utterances(audio)
-    print(utterances)
-    '''
+    #utterances = calculate_utterances(audio)
+    #print(utterances)
+    
     file = open('utterances.pkl', 'rb')
     utterances = pickle.load(file)
     file.close()
-    '''
+    
     utterances = clean_utterances(utterances)
     utterances, questions = questions_metric(utterances)
     engage = engagement_score(utterances)
-    context = {'questions':questions,'engagement_score':engage,'tone_modulation':0.5}
+    context = {'questions':questions,'engagement_score':engage,'tone_modulation':0.5,'graph':visualize1(pd.DataFrame(utterances))}
     return render(request,'analysis/home.html',context)
 
 def calculate_utterances(audio):
@@ -112,3 +114,74 @@ def speech_to_text(filename):
     response = client.recognize(config=config, audio=audio)
     
     return response
+
+def visualize1(df):
+    for count, i in enumerate(df['emotion']):
+        if i == 'non-engaging':
+            i = 0
+        else:
+            i = 1
+        df.loc[count, 'emotion'] = i
+
+    time_points = {'0': [], '1': []}
+    for i, time in enumerate(df['start_time']):
+        end_time = df.loc[i, 'end_time']
+        gap = end_time - time
+        time_points[str(df.loc[i, 'emotion'])].append((time/1000, gap/1000))
+
+    # Calculate the overall time range
+    min_time = min(time_points['0'][0][0], time_points['1'][0][0])
+    max_time = max(time_points['0'][-1][0], time_points['1'][-1][1])
+
+    # Convert the time range to minutes
+    min_time = min_time / 60
+    max_time = max_time / 60
+
+    # Create figure
+    fig = go.Figure()
+
+    # Add non-engaging bars
+    for time_point in time_points['0']:
+        x_center = (time_point[0] + time_point[1]) / (2 * 60)  # Center of the interval in minutes
+        fig.add_shape(
+            type="rect",
+            x0=time_point[0] / 60,
+            x1=time_point[1] / 60,
+            y0=4,
+            y1=16,
+            line=dict(color="red"),
+            fillcolor="red",
+            name="Negative",
+        )
+
+    # Add engaging bars
+    for time_point in time_points['1']:
+        x_center = (time_point[0] + time_point[1]) / (2 * 60)  # Center of the interval in minutes
+        fig.add_shape(
+            type="rect",
+            x0=time_point[0] / 60,
+            x1=time_point[1] / 60,
+            y0=4,
+            y1=16,
+            line=dict(color="green"),
+            fillcolor="green",
+            name="Positive",
+        )
+
+    fig.update_layout(
+        xaxis=dict(
+            title='Time (minutes)',
+            range=[min_time, max_time],  # Set the initial range to show the full time duration
+            tickmode="auto",
+            nticks=10,
+            tickformat="%H:%M:%S",
+        ),
+        yaxis=dict(tickvals=[10], ticktext=['Emotion'], range=[0,25]),
+        showlegend=True,
+        height=300,
+        width=800,
+    )
+
+    #fig.show()
+
+    return fig.to_html()

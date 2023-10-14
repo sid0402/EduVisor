@@ -2,9 +2,43 @@
 
 {%block content%}
 
-<h1>Analysis Dashboard</h1>
-<h1>Questions: {{questions}}</h1>
-<h1>Engagement: {{engagement_score}}</h1>
-<h1>Tone Modulation: {{tone_modulation}}</h1>
+<html>
+    <style>
+        .boxes {
+            display: inline-flex;
+            align-items: center;
+        }
+        .boxes .box {
+            border: 1px solid black;
+            width:300px;
+            height:300px;
+            margin-right:20px;
+            border-radius: 20px;
+            position:relative;
+            right:-150px;
+        }
+    </style>
+    <body>
+        <div>
+            <h1>Analysis Dashboard</h1>
+        </div>
+        <div class='boxes'>
+        <div class="box question">
+            <h1>Questions: {{questions}}</h1>
+        </div>
+        <div class="box engagement">
+            <h1>Engagement: {{engagement_score}}</h1>
+        </div>
+        <div class="box tone_modulation">
+            <h1>Tone Modulation: {{tone_modulation}}</h1>
+        </div>
+        </div>
+        <div class="sentiment-graph">
+            {% if graph %}
+            {{ graph|safe }}
+            {% endif %}
+        </div>
+    </body>
+</html>
 
 {%endblock content%}

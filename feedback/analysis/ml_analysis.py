@@ -5,8 +5,6 @@ import matplotlib.patches as mpatches
 from transformers import pipeline
 import plotly.graph_objects as go
 
-
-
 file = open('utterances.pkl','rb')
 
 utterances = pickle.load(file)
@@ -147,6 +145,8 @@ def visualize1(df):
     )
 
     fig.show()
+
+    fig.write_html("media/plotly_figure.html")
 
 # Example usage:
 # Assuming you have a DataFrame df with columns 'start_time', 'end_time', and 'emotion'
