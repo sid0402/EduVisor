@@ -24,10 +24,14 @@ def home(request):
     utterances = pickle.load(file)
     file.close()
     
+    t = tone_modality(utterances)
+    w = wpm(utterances)
+
     utterances = clean_utterances(utterances)
     questions = questions_metric(utterances)
     engage = engagement_score(utterances)
-    context = {'questions':questions,'engagement_score':engage,'tone_modulation':0.5,'graph':visualize1(pd.DataFrame(utterances))}
+    context = {'questions':questions,'engagement_score':engage,'tone_modulation':t,'graph':visualize1(pd.DataFrame(utterances)),
+                'wpm': w,}
     return render(request,'analysis/home.html',context)
 
 def calculate_utterances(audio):
@@ -62,13 +66,42 @@ def clean_utterances(utterances):
         for emotion in utterance['emotion']:
             if (emotion['score']>max_score):
                 key_max = emotion['label']
-        if (key_max=='fearful' or key_max=='disgust' or key_max=='neutral'):
-            key_max = 'non-engaging'
+        if (key_max in ['calm', 'happy', 'surprised', 'neutral']):
+            key_max = 'engaging'
         else:
-            key_max='engaging'
+            key_max='non-engaging'
         del utterance['emotion']
         utterance['emotion'] = key_max
     return utterances
+
+def get_max_emotion(data_item):
+    emotions_data = {emotion['label']: emotion['score'] for emotion in data_item['emotion']}
+    max_emotion = max(emotions_data, key=emotions_data.get)
+    return max_emotion
+
+def tone_modality(utterances):
+    emotion_counts = {}
+    for item in utterances:
+        emotion = get_max_emotion(item)
+        emotion_counts[emotion] = emotion_counts.get(emotion, 0) + 1
+
+    total_count = sum(emotion_counts.values())
+    num_emotions = len(emotion_counts)
+    ideal_distribution = total_count / num_emotions
+
+    total_difference = sum(abs(count - ideal_distribution) for count in emotion_counts.values())
+    max_difference = (total_count - ideal_distribution) + (num_emotions - 1) * ideal_distribution
+   
+    if max_difference == 0:
+        emotion = next(iter(emotion_counts))
+        if emotion in ['calm', 'happy', 'surprised', 'neutral']:
+            return 0.4
+        else:
+            return 0.2
+    else:
+        modulation_score = total_difference / max_difference
+
+    return (1-modulation_score)
 
 def questions_metric(utterances):
     questions = 0
@@ -84,6 +117,15 @@ def engagement_score(utterances):
         if (utterance['emotion']=='engaging'):
             engage_times+=1
     return engage_times/len(utterances)
+
+def wpm(utterances):
+    combined_transcript = " ".join([utterance['transcript'] for utterance in utterances])
+    total_words = len(combined_transcript.split())
+    print(total_words)
+    total_minutes = utterances[-1]['end_time'] / 60000
+    print(total_minutes)
+    wpm = total_words / total_minutes
+    return wpm
 
 def speech_to_text(filename):
     # Instantiates a client
