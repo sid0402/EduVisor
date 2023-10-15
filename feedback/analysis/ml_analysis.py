@@ -5,6 +5,7 @@ import matplotlib.patches as mpatches
 from transformers import pipeline
 import plotly.graph_objects as go
 
+
 file = open('utterances.pkl','rb')
 
 utterances = pickle.load(file)

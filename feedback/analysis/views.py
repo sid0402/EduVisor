@@ -19,12 +19,14 @@ def home(request):
     audio.write_audiofile('audio/audio.wav')
     audio = AudioSegment.from_wav("audio/audio.wav")
     
-    #utterances = calculate_utterances(audio)
+    utterances = calculate_utterances(audio)
     #print(utterances)
     
+    '''
     file = open('utterances.pkl', 'rb')
     utterances = pickle.load(file)
     file.close()
+    '''
     
     t = tone_modality(utterances)
     w = wpm(utterances)
@@ -32,6 +34,15 @@ def home(request):
     utterances = clean_utterances(utterances)
     questions = questions_metric(utterances)
     engage = engagement_score(utterances)
+    '''
+    s = generate_suggestion(questions,engage,t,w)
+    s = [x.strip() for x in s.replace('\n','').split('-') if x !='']
+    suggestion = []
+    for i in s:
+        s_dict = {}
+        s_dict['point'] = i
+        suggestion.append(s_dict)
+    '''
     suggestion = generate_suggestion(questions,engage,t,w)
     #suggestion = "JKENJDKNDWJKNCEWJKFNMDEWKLJ>FNDKJLEWFNDLWKJRF>NDLKJRWF>NKLRJWN RFLKJ >"
     lecture = Lectures(engagement_ratio = engage,tone_modality=t,questions=questions,suggestion=suggestion,wpm=w,graph=visualize1(pd.DataFrame(utterances)))

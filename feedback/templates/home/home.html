@@ -1,11 +1,191 @@
-{%extends 'main.html'%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Eduvisor - Elevate Your Learning</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            background: linear-gradient(-45deg, #29245E, #3A3A6A, #8F8FDB, #29245E);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+            overflow: hidden;
+        }
 
-{%block content%}
+        @keyframes moveBackground {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 100% 0;
+            }
+        }
 
-<form action="" method="post" enctype="multipart/form-data">
-    {%csrf_token%}
-    {{form.as_p}}
-    <button>Upload</button>
-</form>
+        .moving-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" xmlns:v="https://vecta.io/nano"><path fill="%238F8FDB" d="M40.9,-54.6C54.1,-50.9,66.6,-42,70.4,-30.3C74.2,-18.7,69.4,-4.3,64.3,11.7C59.1,27.7,53.6,45.3,41.4,49.6C29.3,53.9,10.4,45.1,-4.3,44.8C-19,44.5,-30.4,52.7,-39.9,47.7C-49.3,42.7,-56.9,24.5,-58.4,7.9C-60,-8.7,-55.4,-26.9,-45.5,-40.9C-35.6,-54.8,-20.3,-64.4,-3.8,-64.7C12.7,-65,27.7,-58.3,40.9,-54.6Z" transform="translate(100 100)"></path></svg>');
+            background-repeat: no-repeat;
+            background-size: 200% 100%;
+            animation: moveBackground 20s linear infinite;
+        }
 
-{%endblock content%}
+        .navbar {
+            overflow: hidden;
+            background-color: #29245E;
+            border-bottom: 2px solid black;
+            position: relative;
+            z-index: 1;
+        }
+
+        .navbar a {
+            float: left;
+            font-size: 20px;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover, .dropdown:hover .dropbtn {
+            background-color: #8F8FDB;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 2rem 3rem;
+            box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.2);
+            width: 500px;
+            max-width: 100%;
+            text-align: center;
+            margin: 0 auto;
+            margin-top: 50px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-header {
+            margin-bottom: 2rem;
+        }
+
+        .form-header h1 {
+            font-size: 2.25rem;
+            color: #6B38FB;
+            text-align: center;
+        }
+
+        .form-body label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #6B38FB;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .custom-file-input {
+            color: transparent;
+            width: 100%;
+        }
+
+        .custom-file-input::-webkit-file-upload-button {
+            visibility: hidden;
+        }
+
+        .custom-file-input::before {
+            content: 'Select file';
+            color: white;
+            display: inline-block;
+            background: #6B38FB;
+            border-radius: 8px;
+            padding: 0.75rem;
+            outline: none;
+            white-space: nowrap;
+            -webkit-user-select: none;
+            cursor: pointer;
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+            border: none;
+        }
+
+        .custom-file-input:hover::before {
+            border-color: black;
+        }
+
+        .custom-file-input:active::before {
+            background: #9c69e2;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .submit-button {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            background-color: #6B38FB;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .submit-button:hover {
+            background-color: #6B38FB;
+        }
+    </style>
+</head>
+<body>
+    <!-- Moving background -->
+    <div class="moving-background"></div>
+
+    <!-- Navbar section -->
+    <div class="navbar">
+        <a href="/">Home</a>
+        <a href="/profile">My Record</a>
+        <!-- ... other navbar links if any ... -->
+    </div>
+
+    <!-- Form Inputs -->
+    <div class="form-container">
+        <!-- Header Section -->
+        <div class="form-header">
+            <h1>Eduvisor</h1>
+        </div>
+        <form action="/analysis/loading/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="video-name">Enter the Name of the Video</label>
+            <input type="text" id="video-name" class="form-input" placeholder="Video Name" required>
+
+            <label for="file-upload">Choose File</label>
+            <input type="file" id="file-upload" class="form-input custom-file-input" required>
+
+            <div class="form-buttons">
+                <button type="submit" class="submit-button">Upload</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

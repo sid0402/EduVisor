@@ -116,13 +116,12 @@
         font-size: 1.3em;
         padding: 20px;
         text-align: center;
-        white-space: normal;  /* Ensure text wraps to next line */
-        overflow: hidden;     /* Hide any overflow content */
+        white-space: normal;
+        overflow: hidden;
     }
 </style>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-    // Trigger a resize for the Plotly graph
     if(window.Plotly && document.querySelector(".graph .plotly")) {
         Plotly.relayout(document.querySelector(".graph"), {
             width: document.querySelector(".graph").clientWidth,
