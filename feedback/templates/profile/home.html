@@ -1,16 +1,6 @@
-{%extends 'main.html'%}
-
-{%block content%}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Split Webpage</title>
     <style>
         
-        .container {
+        body{
             margin: 0;
             font-family: Arial, sans-serif;
             display: flex;
@@ -43,7 +33,9 @@
             align-items: center;
             justify-content: space-around;
             padding: 20px;
-            background-color: #8F8FDB;
+            background: linear-gradient(-45deg, #29245E, #3A3A6A, #8F8FDB, #29245E);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
         }
 
         .box {
@@ -66,8 +58,8 @@
         }
 
         img {
-            max-width: 50%;
-            max-height: 50%;
+            max-width: 100%;
+            max-height: 100%;
         }
         
         #right .content-container {
@@ -91,50 +83,233 @@
             padding:5px;
         }
 
+
+        body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(-45deg, #29245E, #3A3A6A, #8F8FDB, #29245E);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        color: #EDEDED;
+        margin: 0;
+        padding: 0;
+    }
+
+    @keyframes gradientBG {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    h1, h2 {
+        font-family: 'Roboto Slab', serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 3em;
+        margin-bottom: 40px;
+    }
+
+    .container {
+        max-width: 1300px;
+        margin: auto;
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .boxes {
+        display: flex;
+        justify-content: space-evenly;  /* Updated alignment */
+        align-items: center;
+        flex-wrap: wrap;
+        width: 100%;
+        margin-bottom: 50px;
+    }
+
+    .box2, .sentiment-graph, .feedback {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 30px;
+        background-color: #3A3A6A;
+        color: #EDEDED;
+        transition: all 0.3s;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.3);
+        margin: 20px;  /* Increased margin */
+        padding: 20px;
+        cursor: pointer;
+        overflow: hidden; /* Prevents overflow */
+    }
+
+    .box2 {
+        max-width: 220px;
+        height: 220px;
+    }
+
+    .box2 h2 {
+        font-size: 2.2em;
+        margin-bottom: 10px;
+    }
+
+    .box2 h3 {
+        font-size: 0.9em;
+        font-weight: bold;
+    }
+
+    .box2:hover, .sentiment-graph:hover, .feedback:hover {
+        background-color: #8F8FDB; 
+        transform: scale(1.1);
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .bottom-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .sentiment-graph, .feedback {
+        flex: 1;
+        max-width: calc(50% - 30px);
+        height: 350px;
+    }
+
+    .graph, .text {
+        width: 100%;  /* Ensuring it takes full width */
+        height: 100%; /* Ensuring it takes full height */
+        overflow: auto; /* Adds scrolling if content is larger than container */
+    }
+
+    .text {
+        font-size: 1.3em;
+        padding: 20px;
+        text-align: center;
+    }
+    .plotly-graph-div {
+    width: 100% !important;
+    height: 100% !important;
+}
+.graph {
+    width: 100%;  
+    height: 100%; 
+    overflow: auto; 
+    position: relative; /* Add this line */
+}
+.home-link {
+    display: block;
+    width: auto;
+    padding: 15px 20px;
+    color: #EDEDED;
+    text-decoration: none; /* Remove underline */
+    margin-bottom: 10px; /* Space between the link and the next box */
+    font-weight: bold; /* Make the text bold */
+    cursor: pointer; /* Hand cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    position: absolute;
+    top:0px;
+    font-family: inherit;
+    text-align: left;
+    left:0px;
+    font-size: 20px;  
+    background-color: inherit;
+}
+
+.home-link:hover {
+    background-color: #8F8FDB; /* Change color on hover */
+}
     </style>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let boxes = document.querySelectorAll(".box");
-            let improvementText = document.getElementById("improvement-text");
-        
-            boxes.forEach(box => {
-                box.addEventListener("click", function() {
-                    let improvement = this.getAttribute("data-improvement");
-                    improvementText.textContent = improvement;
-                });
-            });
+document.addEventListener("DOMContentLoaded", function() {
+    let lectureBoxes = document.querySelectorAll("#left .box");
+    
+    lectureBoxes.forEach(lectureBox => {
+        lectureBox.addEventListener("click", function() {
+            // Get data from the clicked lecture box
+            let questions = this.getAttribute("data-question");
+            let engagement = this.getAttribute("data-engament_ratio");
+            let tone = this.getAttribute("data-tone_modality");
+            let wpm = this.getAttribute("data-wpm");
+            let improvement = this.getAttribute("data-improvement");
+            let lectureId = this.getAttribute("data-lecture-id");
+            
+            // Update the boxes on the right side
+            document.getElementById("question").textContent = questions;
+            document.getElementById("engagement").textContent = engagement;
+            document.getElementById("tone").textContent = tone;
+            document.getElementById("wpm").textContent = wpm;
+            document.getElementById("improvement-text").textContent = improvement;
+            
+            // Copy the content of the hidden div to the #graph container
+            let graphContent = document.getElementById("graph-for-lecture-" + lectureId).innerHTML;
+            document.getElementById("graph").innerHTML = graphContent;
         });
+    });
+});
         </script>
-</head>
 
-<body>
-    <div class="container">
+
+
     <div id="left" class="lectures">
+        <a href="/" class="home-link">Home</a>
         {% for lecture in lectures %}
-            <div class="box" data-improvement="{{ lecture.suggested_improvement }}" data-name="{{ lecture.name }}" data-date="{{ lecture.date }}">
-                <strong>Lecture Name:</strong> {{ lecture.name }} <br>
-                <strong>Lecture Date:</strong> {{ lecture.date }}
-            </div>
-        {% endfor %}
+        <div class="box" data-lecture-id="{{ lecture.id }}" data-improvement="{{ lecture.suggestion }}" data-name="{{ lecture.name }}" data-date="{{ lecture.date }}" data-question="{{ lecture.questions }}" data-engament_ratio="{{ lecture.engagement_ratio }}" data-tone_modality="{{ lecture.tone_modality }}" data-wpm="{{ lecture.wpm }}">
+            <strong>Lecture Name:</strong> {{ lecture.name }} <br>
+            <strong>Lecture Date:</strong> {{ lecture.created_at }}
+        </div>
+        <!-- Hidden div to store the graph HTML -->
+        <div id="graph-for-lecture-{{ lecture.id }}" style="display: none;">
+            {{ lecture.graph|safe }}
+        </div>
+    {% endfor %}
     </div>
     <div id="right">
-        <div class="content-container">
-            <h2>Analytics Dashboard</h2>
-            <img src="https://via.placeholder.com/350" alt="Placeholder Image">
-        </div>
-        <div class="content-container">
-            <h2>Suggested Improvement</h2>
-            <p id="improvement-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultrices posuere dictum. Proin at lectus id enim condimentum interdum. Praesent vitae neque non nisl volutpat porttitor. Donec bibendum risus id ante tincidunt, nec lacinia nisi congue.
-            </p>
-        </div>
+
+        <div class="container">
+            <h1>Analysis</h1>
+        
+            <div class='boxes'>
+                <div class="box2 question">
+                    <h3>Questions</h3>
+                    <h2 id="question">{{questions}}</h2>
+                </div>
+                <div class="box2 engagement">
+                    <h3>Engagement</h3>
+                    <h2 id="engagement">{{engagement_score}}</h2>
+                </div>
+                <div class="box2 tone_modulation">
+                    <h3>Tone Modulation</h3>
+                    <h2 id="tone">{{tone_modulation}}</h2>
+                </div>
+                <div class="box2 wpm">
+                    <h3>Words per Minute</h3>
+                    <h2 id="wpm">{{wpm}}</h2>
+                </div>
+            </div>
+        
+            <div class="bottom-row">
+                <div class="sentiment-graph">
+                    <h3>Sentiment Progression Curve</h3>
+                    <div class="graph" id="graph">
+                    </div>
+                </div>
+                <div class="feedback">
+                    <h3>Feedback</h3>
+                    <div class="text">
+                        <p id='improvement-text'>{{suggestion}}</p>
+                    </div>
+                </div>
     </div>
-</div>
-    
-
- 
-    
-</body>
-
-</html>
-{%endblock content%}

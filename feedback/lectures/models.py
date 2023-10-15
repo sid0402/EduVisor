@@ -9,3 +9,4 @@ class Lectures(models.Model):
     questions = models.DecimalField(decimal_places=2,max_digits=5)
     suggestion = models.TextField(default="")
     wpm = models.DecimalField(decimal_places=2,max_digits=5,default=0)
+    graph = models.TextField(blank=True,null=True)

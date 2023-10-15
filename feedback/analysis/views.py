@@ -32,14 +32,17 @@ def home(request):
     utterances = clean_utterances(utterances)
     questions = questions_metric(utterances)
     engage = engagement_score(utterances)
-    #suggestion = generate_suggestion(questions,engage,t,w)
-    suggestion = "JKENJDKNDWJKNCEWJKFNMDEWKLJ>FNDKJLEWFNDLWKJRF>NDLKJRWF>NKLRJWN RFLKJ >"
-    lecture = Lectures(engagement_ratio = engage,tone_modality=t,questions=questions,suggestion=suggestion,wpm=w)
-    #lecture.save()
+    suggestion = generate_suggestion(questions,engage,t,w)
+    #suggestion = "JKENJDKNDWJKNCEWJKFNMDEWKLJ>FNDKJLEWFNDLWKJRF>NDLKJRWF>NKLRJWN RFLKJ >"
+    lecture = Lectures(engagement_ratio = engage,tone_modality=t,questions=questions,suggestion=suggestion,wpm=w,graph=visualize1(pd.DataFrame(utterances)))
+    lecture.save()
     context = {'questions':questions,'engagement_score':engage,'tone_modulation':t,'graph':visualize1(pd.DataFrame(utterances)),
                 'wpm': w,'suggestion':suggestion}
     return render(request,'analysis/a.html',context)
     #return render(request,'analysis/home.html',context)
+
+def loading(request):
+    return render(request, 'analysis/loading.html')
 
 def calculate_utterances(audio):
     utterances = []

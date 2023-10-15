@@ -1,6 +1,6 @@
-{%extends 'main.html'%}
+{% extends 'main.html' %}
 
-{%block content%}
+{% block content %}
 <style>
     body {
         font-family: 'Poppins', sans-serif;
@@ -47,7 +47,7 @@
 
     .boxes {
         display: flex;
-        justify-content: space-evenly;  /* Updated alignment */
+        justify-content: space-evenly;
         align-items: center;
         flex-wrap: wrap;
         width: 100%;
@@ -65,10 +65,10 @@
         color: #EDEDED;
         transition: all 0.3s;
         box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.3);
-        margin: 20px;  /* Increased margin */
+        margin: 20px;
         padding: 20px;
         cursor: pointer;
-        overflow: hidden; /* Prevents overflow */
+        overflow: hidden;
     }
 
     .box {
@@ -87,7 +87,7 @@
     }
 
     .box:hover, .sentiment-graph:hover, .feedback:hover {
-        background-color: #8F8FDB; 
+        background-color: #8F8FDB;
         transform: scale(1.1);
         box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.4);
     }
@@ -107,18 +107,30 @@
     }
 
     .graph, .text {
-        width: 100%;  /* Ensuring it takes full width */
-        height: 100%; /* Ensuring it takes full height */
-        overflow: auto; /* Adds scrolling if content is larger than container */
+        width: 100%;
+        height: 100%;
+        overflow: auto;
     }
 
     .text {
         font-size: 1.3em;
         padding: 20px;
         text-align: center;
+        white-space: normal;  /* Ensure text wraps to next line */
+        overflow: hidden;     /* Hide any overflow content */
     }
 </style>
-
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    // Trigger a resize for the Plotly graph
+    if(window.Plotly && document.querySelector(".graph .plotly")) {
+        Plotly.relayout(document.querySelector(".graph"), {
+            width: document.querySelector(".graph").clientWidth,
+            height: document.querySelector(".graph").clientHeight
+        });
+    }
+});
+</script>
 <div class="container">
     <h1>Analysis Dashboard</h1>
 
@@ -143,6 +155,7 @@
 
     <div class="bottom-row">
         <div class="sentiment-graph">
+            <h3>Sentiment Progression Curve</h3>
             <div class="graph">
                 {% if graph %}
                 {{ graph|safe }}
@@ -150,8 +163,12 @@
             </div>
         </div>
         <div class="feedback">
+            <h3>Feedback</h3>
             <div class="text">
                 {{suggestion}}
             </div>
         </div>
+    </div>
+</div>
+
 {% endblock content %}
