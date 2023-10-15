@@ -8,6 +8,8 @@ from google.cloud import speech
 from lectures.models import Lectures
 import pandas as pd
 import plotly.graph_objects as go
+import openai
+
 
 # Create your views here.
 def home(request):
@@ -30,9 +32,14 @@ def home(request):
     utterances = clean_utterances(utterances)
     questions = questions_metric(utterances)
     engage = engagement_score(utterances)
+    #suggestion = generate_suggestion(questions,engage,t,w)
+    suggestion = "JKENJDKNDWJKNCEWJKFNMDEWKLJ>FNDKJLEWFNDLWKJRF>NDLKJRWF>NKLRJWN RFLKJ >"
+    lecture = Lectures(engagement_ratio = engage,tone_modality=t,questions=questions,suggestion=suggestion,wpm=w)
+    #lecture.save()
     context = {'questions':questions,'engagement_score':engage,'tone_modulation':t,'graph':visualize1(pd.DataFrame(utterances)),
-                'wpm': w,}
-    return render(request,'analysis/home.html',context)
+                'wpm': w,'suggestion':suggestion}
+    return render(request,'analysis/a.html',context)
+    #return render(request,'analysis/home.html',context)
 
 def calculate_utterances(audio):
     utterances = []
@@ -56,7 +63,7 @@ def calculate_utterances(audio):
         utt_dict['transcript'] = text
         i+=t
         print(utt_dict)
-        utterances.append(utt_dict)        
+        utterances.append(utt_dict)       
     return utterances
 
 def clean_utterances(utterances):
@@ -126,6 +133,26 @@ def wpm(utterances):
     print(total_minutes)
     wpm = total_words / total_minutes
     return wpm
+
+def generate_suggestion(questions, engage, t, wpm):
+    data = {
+    'questions': questions,
+    'emotion_analysis': engage,
+    'tone_modulation': t,
+    'wpm':wpm
+    }
+    #openai key
+    openai.api_key = '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'
+    messages = [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": f"Context: Tone modality refers to how much variation in tone a teacher has had throughout her lecture. the higher the number between 0 and 100, the higher her tone modulation and the better the teacher's engagement in the lecture. The emotions we're analyzing throughout the lecture are ['angry', 'calm', 'disgust', 'fearful', 'happy', 'neutral', 'sad',  'surprised'], and we're also measuring their speed of speech (words per minute) and the number of questions asked during the lecture. Prompt: During the lecture, the teacher's tone modality was {data['tone_modulation']},  their words per minute was {data['emotion_analysis']}, and they asked {data['questions']} questions. Based on this information,  provide a short bulleted suggestion  as if you're talking to the teacher (without first person references) (maximum 5 points, 200 words) to improve the teacher's lecturing."}
+    ]
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages = messages
+    )
+    return response['choices'][0]['message']['content']
 
 def speech_to_text(filename):
     # Instantiates a client

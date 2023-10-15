@@ -16,7 +16,8 @@ def home(request):
     return render(request,'home/home.html',context)
 
 def success(request):
-    filename = 'media/'+str(Video.objects.all()[len(Video.objects.all())-1].video)
+    filename = '/media/'+str(Video.objects.all()[len(Video.objects.all())-1].video)+'/'
     name = Video.objects.all()[len(Video.objects.all())-1].name
+    print(filename)
     context = {'video':filename,'name':name}
     return render(request, 'home/success.html',context)

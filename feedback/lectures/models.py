@@ -7,3 +7,5 @@ class Lectures(models.Model):
     engagement_ratio = models.DecimalField(decimal_places=2,max_digits=5)
     tone_modality = models.DecimalField(decimal_places=2,max_digits=5)
     questions = models.DecimalField(decimal_places=2,max_digits=5)
+    suggestion = models.TextField(default="")
+    wpm = models.DecimalField(decimal_places=2,max_digits=5,default=0)

@@ -1,0 +1,159 @@
+{% block content %}
+{%extends 'main.html'%}
+
+{%block content%}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(-45deg, #29245E, #3A3A6A, #8F8FDB, #29245E);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        color: #EDEDED;
+        margin: 0;
+        padding: 0;
+    }
+
+    @keyframes gradientBG {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    h1, h2 {
+        font-family: 'Roboto Slab', serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 3em;
+        margin-bottom: 40px;
+    }
+
+    .container {
+        max-width: 1300px;
+        margin: auto;
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .boxes {
+        display: flex;
+        justify-content: space-evenly;  /* Updated alignment */
+        align-items: center;
+        flex-wrap: wrap;
+        width: 100%;
+        margin-bottom: 50px;
+    }
+
+    .box, .sentiment-graph, .feedback {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 30px;
+        background-color: #3A3A6A;
+        color: #EDEDED;
+        transition: all 0.3s;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.3);
+        margin: 20px;  /* Increased margin */
+        padding: 20px;
+        cursor: pointer;
+        overflow: hidden; /* Prevents overflow */
+    }
+
+    .box {
+        max-width: 220px;
+        height: 220px;
+    }
+
+    .box h2 {
+        font-size: 2.2em;
+        margin-bottom: 10px;
+    }
+
+    .box h3 {
+        font-size: 0.9em;
+        font-weight: bold;
+    }
+
+    .box:hover, .sentiment-graph:hover, .feedback:hover {
+        background-color: #8F8FDB; 
+        transform: scale(1.1);
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .bottom-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .sentiment-graph, .feedback {
+        flex: 1;
+        max-width: calc(50% - 30px);
+        height: 350px;
+    }
+
+    .graph, .text {
+        width: 100%;  /* Ensuring it takes full width */
+        height: 100%; /* Ensuring it takes full height */
+        overflow: auto; /* Adds scrolling if content is larger than container */
+    }
+
+    .text {
+        font-size: 1.3em;
+        padding: 20px;
+        text-align: center;
+    }
+</style>
+
+<div class="container">
+    <h1>Analysis Dashboard</h1>
+
+    <div class='boxes'>
+        <div class="box question">
+            <h3>Questions</h3>
+            <h2>{{questions}}</h2>
+        </div>
+        <div class="box engagement">
+            <h3>Engagement</h3>
+            <h2>{{engagement_score}}</h2>
+        </div>
+        <div class="box tone_modulation">
+            <h3>Tone Modulation</h3>
+            <h2>{{tone_modulation}}</h2>
+        </div>
+        <div class="box wpm">
+            <h3>Words per Minute</h3>
+            <h2>{{wpm}}</h2>
+        </div>
+    </div>
+
+    <div class="bottom-row">
+        <div class="sentiment-graph">
+            <div class="graph">
+                {% if graph %}
+                {{ graph|safe }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="feedback">
+            <div class="text">
+                {{suggestion}}
+            </div>
+        </div>
+{% endblock content %}
+{% endblock content %}
