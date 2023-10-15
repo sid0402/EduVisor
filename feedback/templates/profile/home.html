@@ -197,7 +197,6 @@
     .text {
         font-size: 1.3em;
         padding: 20px;
-        text-align: center;
     }
     .plotly-graph-div {
     width: 100% !important;
@@ -231,6 +230,10 @@
 .home-link:hover {
     background-color: #8F8FDB; /* Change color on hover */
 }
+#name {
+    position: relative;
+    top:10px;
+}
     </style>
     <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -245,6 +248,8 @@ document.addEventListener("DOMContentLoaded", function() {
             let wpm = this.getAttribute("data-wpm");
             let improvement = this.getAttribute("data-improvement");
             let lectureId = this.getAttribute("data-lecture-id");
+            let name = this.getAttribute("data-name");
+            let date = this.getAttribute("data-date");
             
             // Update the boxes on the right side
             document.getElementById("question").textContent = questions;
@@ -252,6 +257,8 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("tone").textContent = tone;
             document.getElementById("wpm").textContent = wpm;
             document.getElementById("improvement-text").textContent = improvement;
+            document.getElementById("name").textContent = name;
+            document.getElementById("date").textContent = date;
             
             // Copy the content of the hidden div to the #graph container
             let graphContent = document.getElementById("graph-for-lecture-" + lectureId).innerHTML;
@@ -266,7 +273,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <div id="left" class="lectures">
         <a href="/" class="home-link">Home</a>
         {% for lecture in lectures %}
-        <div class="box" data-lecture-id="{{ lecture.id }}" data-improvement="{{ lecture.suggestion }}" data-name="{{ lecture.name }}" data-date="{{ lecture.date }}" data-question="{{ lecture.questions }}" data-engament_ratio="{{ lecture.engagement_ratio }}" data-tone_modality="{{ lecture.tone_modality }}" data-wpm="{{ lecture.wpm }}">
+        <div class="box" data-lecture-id="{{ lecture.id }}" data-improvement="{{ lecture.suggestion }}" data-name="{{ lecture.name }}" data-date="{{ lecture.date }}" data-question="{{ lecture.questions }}" data-engament_ratio="{{ lecture.engagement_ratio }}" data-tone_modality="{{ lecture.tone_modality }}" data-wpm="{{ lecture.wpm }}" data-name="{{ lecture.name }}" data-date="{{ lecture.created_at }}">
             <strong>Lecture Name:</strong> {{ lecture.name }} <br>
             <strong>Lecture Date:</strong> {{ lecture.created_at }}
         </div>
@@ -279,7 +286,8 @@ document.addEventListener("DOMContentLoaded", function() {
     <div id="right">
 
         <div class="container">
-            <h1>Analysis</h1>
+            <h1 id="name"></h1>
+            <h2 id="date"></h2>
         
             <div class='boxes'>
                 <div class="box2 question">
@@ -287,11 +295,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     <h2 id="question">{{questions}}</h2>
                 </div>
                 <div class="box2 engagement">
-                    <h3>Engagement</h3>
+                    <h3>Engagement %</h3>
                     <h2 id="engagement">{{engagement_score}}</h2>
                 </div>
                 <div class="box2 tone_modulation">
-                    <h3>Tone Modulation</h3>
+                    <h3>Tone Modulation %</h3>
                     <h2 id="tone">{{tone_modulation}}</h2>
                 </div>
                 <div class="box2 wpm">

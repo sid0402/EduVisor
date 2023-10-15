@@ -84,17 +84,21 @@
             transform: translateY(-1px);
             box-shadow: 0 5px 10px rgba(0,0,0,0.2);
         }
+        #log{
+  position:absolute;
+  right:3%;
+}
     </style>
 </head>
 <body>
 
     <div class="navbar">
         <a href="/">Home</a>
-        <a href="/profile">My Record</a>
+        <a href="/profile">Previous Lectures</a>
     </div>
 
     <div class="main-content">
-        {% if video %}
+        {% if filename %}
             <h1>{{name}}</h1>
             <video controls="controls">
                 <source src="{{filename}}" type="video/mp4">

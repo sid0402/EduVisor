@@ -6,7 +6,7 @@ class Video_form(forms.ModelForm):
         label="Name",
         widget=forms.TextInput(attrs={
             'class': 'styled-input',
-            'placeholder': 'Enter your name'
+            'placeholder': 'Enter lecture topic'
         })
     )
     video = forms.FileField(

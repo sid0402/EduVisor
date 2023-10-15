@@ -20,12 +20,14 @@ def home(request):
     audio.write_audiofile('audio/audio.wav')
     audio = AudioSegment.from_wav("audio/audio.wav")
     
-    #utterances = calculate_utterances(audio)
+    utterances = calculate_utterances(audio)
     #print(utterances)
+    
+    '''
     file = open('utterances.pkl', 'rb')
     utterances = pickle.load(file)
     file.close()
-
+    '''
 
     t = tone_modality(utterances)
     w = wpm(utterances)
@@ -42,9 +44,9 @@ def home(request):
         s_dict['point'] = i
         suggestion.append(s_dict)
     '''
-    #suggestion = generate_suggestion(questions,engage,t,w)
+    suggestion = generate_suggestion(questions,engage,t,w)
     name = request.session['lecture_name'].capitalize()
-    suggestion = "JKENJDKNDWJKNCEWJKFNMDEWKLJ>FNDKJLEWFNDLWKJRF>NDLKJRWF>NKLRJWN RFLKJ >"
+    #suggestion = "JKENJDKNDWJKNCEWJKFNMDEWKLJ>FNDKJLEWFNDLWKJRF>NDLKJRWF>NKLRJWN RFLKJ >"
     lecture = Lectures(name=name,engagement_ratio = engage,tone_modality=t,questions=questions,suggestion=suggestion,wpm=w,graph=visualize1(pd.DataFrame(utterances)))
     lecture.save()
     context = {'questions':questions,'engagement_score':engage,'tone_modulation':t,'graph':visualize1(pd.DataFrame(utterances)),
@@ -201,10 +203,10 @@ def speech_to_text(filename):
 def visualize1(df):
     for count, i in enumerate(df['emotion']):
         if i == 'non-engaging':
-            i = 0
+            temp = 0
         else:
-            i = 1
-        df.loc[count, 'emotion'] = i
+            temp = 1
+        df.loc[count, 'emotion'] = temp
 
     time_points = {'0': [], '1': []}
     for i, time in enumerate(df['start_time']):
@@ -214,7 +216,7 @@ def visualize1(df):
 
     # Calculate the overall time range
     min_time = min(time_points['0'][0][0], time_points['1'][0][0])
-    max_time = max(time_points['0'][-1][0], time_points['1'][-1][1])
+    max_time = max(time_points['0'][-1][0], time_points['1'][-1][0])
 
     # Convert the time range to minutes
     min_time = min_time / 60
