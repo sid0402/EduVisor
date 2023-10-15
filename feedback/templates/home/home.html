@@ -1,31 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Eduvisor - Elevate Your Learning</title>
+    <title>Eduvisor - Upload Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
+        
+           * {
             margin: 0;
-            background: linear-gradient(-45deg, #29245E, #3A3A6A, #8F8FDB, #29245E);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: white;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #29245E;
+            color: #333;
+            position: relative;
             overflow: hidden;
         }
 
-        @keyframes moveBackground {
-            0% {
-                background-position: 0 0;
-            }
-            100% {
-                background-position: 100% 0;
-            }
-        }
-
         .moving-background {
+            /* Your background animation styles here */
             position: absolute;
             top: 0;
             left: 0;
@@ -33,16 +36,27 @@
             height: 100%;
             background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" xmlns:v="https://vecta.io/nano"><path fill="%238F8FDB" d="M40.9,-54.6C54.1,-50.9,66.6,-42,70.4,-30.3C74.2,-18.7,69.4,-4.3,64.3,11.7C59.1,27.7,53.6,45.3,41.4,49.6C29.3,53.9,10.4,45.1,-4.3,44.8C-19,44.5,-30.4,52.7,-39.9,47.7C-49.3,42.7,-56.9,24.5,-58.4,7.9C-60,-8.7,-55.4,-26.9,-45.5,-40.9C-35.6,-54.8,-20.3,-64.4,-3.8,-64.7C12.7,-65,27.7,-58.3,40.9,-54.6Z" transform="translate(100 100)"></path></svg>');
             background-repeat: no-repeat;
-            background-size: 200% 100%;
+            background-size: 50% auto;
             animation: moveBackground 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes moveBackground {
+            0% {
+                transform: translate(0%, 0%);
+            }
+            50% {
+                transform: translate(-30%, -30%);
+            }
+            100% {
+                transform: translate(0%, 0%);
+            }
         }
 
         .navbar {
             overflow: hidden;
             background-color: #29245E;
             border-bottom: 2px solid black;
-            position: relative;
-            z-index: 1;
         }
 
         .navbar a {
@@ -59,17 +73,13 @@
         }
 
         .form-container {
-            background: rgba(255, 255, 255, 0.8);
+            background: #29245E;
             border-radius: 16px;
             padding: 2rem 3rem;
             box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.2);
             width: 500px;
             max-width: 100%;
             text-align: center;
-            margin: 0 auto;
-            margin-top: 50px;
-            position: relative;
-            z-index: 2;
         }
 
         .form-header {
@@ -133,59 +143,156 @@
             background: #9c69e2;
         }
 
-        .form-buttons {
+        .submit-button, .analyze-button {
+            display: inline-block;
+            width: 200px;
+            padding: 20px;
+            color: #FFF;
+            background-color: #4a47a3;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2em;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .submit-button:hover, .analyze-button:hover {
+            background-color: #5f5caf;
+            transform: translateY(-3px);
+        }
+
+        .submit-button:active, .analyze-button:active {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        
+        .form-container {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+        }
+
+        .form-header h1 {
+            color: white; /* Eduvisor text color */
+        }
+
+        .form-body label {
+            color: white; /* Label text color */
+        }
+
+        .form-input, .custom-file-input::before, .submit-button {
+            max-width: 300px; /* Adjust width as needed */
+            margin-bottom: 20px; /* Spacing out the fields */
         }
 
         .submit-button {
-            display: inline-block;
-            padding: 0.75rem 2rem;
-            font-size: 1rem;
-            border: none;
-            border-radius: 8px;
-            color: #fff;
-            background-color: #6B38FB;
-            cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
+            width: 150px; /* Smaller button */
+            padding: 10px;
+            font-size: 1em;
         }
 
-        .submit-button:hover {
-            background-color: #6B38FB;
-        }
+        .form-container p .form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    background-color: white; /* Making the input fields white */
+    color: #29245E; /* Text color for better contrast */
+}
+
+.form-container p label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: white; /* Making the labels white */
+}
+
+/* Styling the "No file chosen" text */
+.custom-file-input::-webkit-file-upload-button, 
+.custom-file-input::-moz-file-upload-button {
+    display: none;
+}
+
+.custom-file-input:after {
+    content: "No file chosen";
+    color: white;
+    display: block;
+    position: relative;
+    top: -2rem; /* Adjust as needed to position the text */
+    left: 0.75rem; /* Adjust as needed to position the text */
+}
+
+/* Centering the "Choose File" button below the "Video" text */
+.custom-file-input::before {
+    /* ... (rest of the styles remain unchanged) ... */
+    margin-top: 1rem; /* Add space above the button */
+}
+.styled-input {
+    color: white;  /* Text color */
+    background-color: #8F8FDB;  /* Background color matching the body's background */
+    border: 1px solid white;  /* Border color for distinction */
+    padding: 10px;  /* Padding for spacing */
+    margin-bottom: 20px;  /* Margin to space out the fields */
+    display: block;  /* To ensure each input takes the full width */
+    width:100%;
+}
+
+/* Styling the labels to be white */
+label {
+    color: white;
+    margin-bottom: 10px;  /* Spacing between label and input */
+    display: block;  /* To ensure label is on its own line */
+}
+.white-label {
+    color: white;
+}
+button[type="submit"] {
+    border-radius: 15px;
+    background-color: #8F8FDB;
+    padding:10px;
+    width: 100px;
+    border:1px solid black;
+    color: white;
+}
+.styled-input::placeholder {
+    color: white;
+    text-align:center;
+}
+.styled-input[type="file"] {
+}
     </style>
 </head>
+
 <body>
     <!-- Moving background -->
     <div class="moving-background"></div>
-
-    <!-- Navbar section -->
-    <div class="navbar">
-        <a href="/">Home</a>
-        <a href="/profile">My Record</a>
-        <!-- ... other navbar links if any ... -->
-    </div>
 
     <!-- Form Inputs -->
     <div class="form-container">
         <!-- Header Section -->
         <div class="form-header">
-            <h1>Eduvisor</h1>
+            <h1>EduVisor</h1>
         </div>
-        <form action="/analysis/loading/" method="post" enctype="multipart/form-data">
+
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <label for="video-name">Enter the Name of the Video</label>
-            <input type="text" id="video-name" class="form-input" placeholder="Video Name" required>
-
-            <label for="file-upload">Choose File</label>
-            <input type="file" id="file-upload" class="form-input custom-file-input" required>
-
-            <div class="form-buttons">
-                <button type="submit" class="submit-button">Upload</button>
+            <div class="form-group">
+                <label class="white-label" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                {{ form.name }}
             </div>
+            <div class="form-group">
+                <label class="white-label" for="{{ form.video.id_for_label }}">{{ form.video.label }}</label>
+                {{ form.video }}
+            </div>
+            <button type="submit">Upload</button>
         </form>
     </div>
 </body>
+
 </html>

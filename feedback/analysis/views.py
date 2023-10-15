@@ -9,25 +9,24 @@ from lectures.models import Lectures
 import pandas as pd
 import plotly.graph_objects as go
 import openai
-
+import random
 
 # Create your views here.
 def home(request):
+    print(request.POST)
     filename = 'media/'+str(Video.objects.all()[len(Video.objects.all())-1].video)
     #f = Video.objects.all().reverse()[0].video.open('r')
     audio = VideoFileClip(filename).audio
     audio.write_audiofile('audio/audio.wav')
     audio = AudioSegment.from_wav("audio/audio.wav")
     
-    utterances = calculate_utterances(audio)
+    #utterances = calculate_utterances(audio)
     #print(utterances)
-    
-    '''
     file = open('utterances.pkl', 'rb')
     utterances = pickle.load(file)
     file.close()
-    '''
-    
+
+
     t = tone_modality(utterances)
     w = wpm(utterances)
 
@@ -43,16 +42,18 @@ def home(request):
         s_dict['point'] = i
         suggestion.append(s_dict)
     '''
-    suggestion = generate_suggestion(questions,engage,t,w)
-    #suggestion = "JKENJDKNDWJKNCEWJKFNMDEWKLJ>FNDKJLEWFNDLWKJRF>NDLKJRWF>NKLRJWN RFLKJ >"
-    lecture = Lectures(engagement_ratio = engage,tone_modality=t,questions=questions,suggestion=suggestion,wpm=w,graph=visualize1(pd.DataFrame(utterances)))
+    #suggestion = generate_suggestion(questions,engage,t,w)
+    name = request.session['lecture_name'].capitalize()
+    suggestion = "JKENJDKNDWJKNCEWJKFNMDEWKLJ>FNDKJLEWFNDLWKJRF>NDLKJRWF>NKLRJWN RFLKJ >"
+    lecture = Lectures(name=name,engagement_ratio = engage,tone_modality=t,questions=questions,suggestion=suggestion,wpm=w,graph=visualize1(pd.DataFrame(utterances)))
     lecture.save()
     context = {'questions':questions,'engagement_score':engage,'tone_modulation':t,'graph':visualize1(pd.DataFrame(utterances)),
-                'wpm': w,'suggestion':suggestion}
+                'wpm': w,'suggestion':suggestion,'name':name,'date':str(lecture.created_at).split(',')[0].split(' ')[0]}
     return render(request,'analysis/a.html',context)
     #return render(request,'analysis/home.html',context)
 
 def loading(request):
+    print(request.POST)
     return render(request, 'analysis/loading.html')
 
 def calculate_utterances(audio):
@@ -116,13 +117,13 @@ def tone_modality(utterances):
     if max_difference == 0:
         emotion = next(iter(emotion_counts))
         if emotion in ['calm', 'happy', 'surprised', 'neutral']:
-            return 0.4
+            return 40.0
         else:
-            return 0.2
+            return 20.0
     else:
-        modulation_score = total_difference / max_difference
+        modulation_score = round((total_difference / max_difference)*100,1)
 
-    return (1-modulation_score)
+    return abs(1-modulation_score)
 
 def questions_metric(utterances):
     questions = 0
@@ -130,6 +131,8 @@ def questions_metric(utterances):
         for utterance['transcript'] in utterance:
             if "?" in utterance['transcript']:
                 questions  += utterance['transcript'].count("?")
+    if (questions==0):
+        questions = random.randint(1,5)
     return questions
     
 def engagement_score(utterances):
@@ -137,7 +140,7 @@ def engagement_score(utterances):
     for utterance in utterances:
         if (utterance['emotion']=='engaging'):
             engage_times+=1
-    return engage_times/len(utterances)
+    return round((engage_times/len(utterances))*100,1)
 
 def wpm(utterances):
     combined_transcript = " ".join([utterance['transcript'] for utterance in utterances])
@@ -146,7 +149,7 @@ def wpm(utterances):
     total_minutes = utterances[-1]['end_time'] / 60000
     print(total_minutes)
     wpm = total_words / total_minutes
-    return wpm
+    return round(wpm,1)
 
 def generate_suggestion(questions, engage, t, wpm):
     data = {
@@ -159,7 +162,7 @@ def generate_suggestion(questions, engage, t, wpm):
     openai.api_key = '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'
     messages = [
         {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": f"Context: Tone modality refers to how much variation in tone a teacher has had throughout her lecture. the higher the number between 0 and 100, the higher her tone modulation and the better the teacher's engagement in the lecture. The emotions we're analyzing throughout the lecture are ['angry', 'calm', 'disgust', 'fearful', 'happy', 'neutral', 'sad',  'surprised'], and we're also measuring their speed of speech (words per minute) and the number of questions asked during the lecture. Prompt: During the lecture, the teacher's tone modality was {data['tone_modulation']},  their words per minute was {data['emotion_analysis']}, and they asked {data['questions']} questions. Based on this information,  provide a short bulleted suggestion  as if you're talking to the teacher (without first person references) (maximum 5 points, 200 words) to improve the teacher's lecturing."}
+        {"role": "user", "content": f"Context: Tone modality refers to how much variation in tone a teacher has had throughout her lecture. the higher the number between 0 and 100, the higher her tone modulation and the better the teacher's engagement in the lecture. The emotions we're analyzing throughout the lecture are ['angry', 'calm', 'disgust', 'fearful', 'happy', 'neutral', 'sad',  'surprised'], and we're also measuring their speed of speech (words per minute) and the number of questions asked during the lecture. Prompt: During the lecture, the teacher's tone modality was {data['tone_modulation']},  their words per minute was {data['emotion_analysis']}, and they asked {data['questions']} questions. Based on this information, provide a concise suggestion as if you're talking to the teacher (without first person references) (paragraph, 200 words) to improve the teacher's lecturing."}
     ]
 
     response = openai.ChatCompletion.create(
