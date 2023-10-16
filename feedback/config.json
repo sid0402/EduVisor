@@ -1,0 +1,6 @@
+{
+    "google_cloud_key": "your_google_cloud_key.json",
+    "openai_key": "your_openai_key",
+    "hugging_face_key": "your_hugging_face_key"
+  }
+  

@@ -10,6 +10,8 @@ import pandas as pd
 import plotly.graph_objects as go
 import openai
 import random
+import json
+
 
 # Create your views here.
 def home(request):
@@ -19,6 +21,14 @@ def home(request):
     audio = VideoFileClip(filename).audio
     audio.write_audiofile('audio/audio.wav')
     audio = AudioSegment.from_wav("audio/audio.wav")
+
+    with open('config.json') as config_file:
+        config_data = json.load(config_file)
+
+    global google_cloud_key, openai_key, hugging_face_key
+    google_cloud_key = config_data['google_cloud_key']
+    openai_key = config_data['openai_key']
+    hugging_face_key = config_data['hugging_face_key']
     
     utterances = calculate_utterances(audio)
     #print(utterances)
@@ -161,7 +171,7 @@ def generate_suggestion(questions, engage, t, wpm):
     'wpm':wpm
     }
     #openai key
-    openai.api_key = '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'
+    openai.api_key = openai_key
     messages = [
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": f"Context: Tone modality refers to how much variation in tone a teacher has had throughout her lecture. the higher the number between 0 and 100, the higher her tone modulation and the better the teacher's engagement in the lecture. The emotions we're analyzing throughout the lecture are ['angry', 'calm', 'disgust', 'fearful', 'happy', 'neutral', 'sad',  'surprised'], and we're also measuring their speed of speech (words per minute) and the number of questions asked during the lecture. Prompt: During the lecture, the teacher's tone modality was {data['tone_modulation']},  their words per minute was {data['emotion_analysis']}, and they asked {data['questions']} questions. Based on this information, provide a concise suggestion as if you're talking to the teacher (without first person references) (paragraph, 200 words) to improve the teacher's lecturing."}
@@ -177,7 +187,7 @@ def speech_to_text(filename):
     # Instantiates a client
     #client = speech.SpeechClient()
 
-    client = speech.SpeechClient.from_service_account_json('hackgt-audio-9ba4eb05b9b2.json')
+    client = speech.SpeechClient.from_service_account_json(google_cloud_key)
 
     with open(filename,'rb') as f:
         audio_data = f.read()
